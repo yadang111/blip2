@@ -20,7 +20,7 @@
 
 ## 4. 模型结构
 
-请说明自己的 Mini-BLIP2 结构，例如：
+请说明自己的 Mini-BLIP2 结构
 
 ```text
 本实验实现了一个简化版 Mini-BLIP2 模型，用于完成图像描述生成任务。整体结构如下：
@@ -32,34 +32,48 @@ Image → Frozen Vision Encoder → Mini Q-Former → Projection Layer → Froze
 
 ### 4.1 Vision Encoder
 
-填写使用的视觉编码器，例如：`openai/clip-vit-base-patch32`。
-
+填写使用的视觉编码器，openai/clip-vit-base-patch32
+该模块使用 Hugging Face Transformers 中的 `CLIPVisionModel` 加载。输入图片经过 CLIP 图像预处理后，送入 CLIP Vision Encoder，输出图像特征序列。该视觉编码器在训练过程中保持冻结，不参与参数更新。
+- 模型名称：openai/clip-vit-base-patch32
+- 加载方式：CLIPVisionModel
+- 是否冻结：是
+- 输出 hidden size：768
 ### 4.2 Mini Q-Former
 
-说明自己实现的 Mini Q-Former：
+说明自己实现的 Mini Q-Former：16
 
-- query token 数量：
-- hidden size：
-- Transformer 层数：
-- 是否使用 cross-attention：
-
+- query token 数量：768
+- hidden size：2
+- Transformer 层数：8
+- 是否使用 cross-attention：是
+具体来说，CLIP Vision Encoder 输出的图像特征作为 memory，可学习 query tokens 作为 target，输入到 `nn.TransformerDecoder` 中。通过 cross-attention，query tokens 能够从图像 patch 特征中聚合视觉信息。最终 Mini Q-Former 输出形状为：
+[batch_size, num_query_tokens, hidden_size]
+即：
+[batch_size, 16, 768]
 ### 4.3 Language Decoder
 
-填写使用的语言解码器，例如：`facebook/opt-125m`。
-
+填写使用的语言解码器，本实验使用的语言解码器为：
+facebook/opt-125m
+该模块使用 Hugging Face Transformers 中的 `OPTForCausalLM` 加载。OPT-125M 作为 frozen language decoder，用于根据视觉 prefix 和文本上下文生成英文 caption。
+- 模型名称：facebook/opt-125m
+- 加载方式：OPTForCausalLM
+- 是否冻结：是
+- 词表大小：50272
+- hidden size：768
+训练时，OPT-125M 的参数不更新，但梯度仍然需要从 loss 反向传播经过 OPT 的输入 embedding 回到 Projection Layer 和 Mini Q-Former。因此在 forward 过程中没有对 OPT 使用 `torch.no_grad()`，只通过 `requires_grad=False` 冻结其参数。
 ## 5. 训练设置
 
 请填写：
 
 - 训练数据量：
-- epoch：
-- batch size：
-- learning rate：
-- optimizer：
-- loss function：
-- 冻结的模块：
-- 训练的模块：
-
+- epoch：3
+- batch size：1
+- learning rate：1e-4
+- optimizer：AdamW 
+- loss function：Cross Entropy Loss 
+- 冻结的模块：CLIP Vision Encoder；OPT-125M Language Decoder
+- 训练的模块：Mini Q-Former；Projection Layer
+训练过程中，视觉编码器 `openai/clip-vit-base-patch32` 和语言解码器 `facebook/opt-125m` 均保持冻结，不参与参数更新。模型主要训练中间的 Mini Q-Former 和 Projection Layer，使其能够将图像特征映射到语言模型可以利用的 embedding 空间中，从而完成图像描述生成任务。
 ## 6. 训练过程
 
 粘贴训练日志或 loss 变化截图。

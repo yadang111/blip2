@@ -23,7 +23,11 @@
 请说明自己的 Mini-BLIP2 结构，例如：
 
 ```text
+本实验实现了一个简化版 Mini-BLIP2 模型，用于完成图像描述生成任务。整体结构如下：
 Image → Frozen Vision Encoder → Mini Q-Former → Projection Layer → Frozen Language Decoder → Caption
+具体流程为：首先将输入图片送入冻结的视觉编码器 CLIP Vision Encoder，提取图像 patch 特征；然后使用可训练的 Mini Q-Former，通过 learnable query tokens 对图像特征进行 cross-attention，得到与文本生成相关的视觉表示；接着使用 Projection Layer 将 Q-Former 输出映射到语言模型 OPT-125M 的 hidden size；最后将映射后的视觉 prefix 与文本输入拼接，送入冻结的 OPT Language Decoder 中进行 caption 生成。
+在训练过程中，CLIP Vision Encoder 和 OPT Language Decoder 的参数均被冻结，只训练 Mini Q-Former 和 Projection Layer。
+### 4.1 Vision Encoder
 ```
 
 ### 4.1 Vision Encoder

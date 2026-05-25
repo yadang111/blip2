@@ -78,7 +78,8 @@ facebook/opt-125m
 
 粘贴训练日志或 loss 变化截图。
 
-示例：
+示例：[Uploading train_log.txt…]()
+
 
 | Epoch | Train Loss |
 |---|---:|
@@ -101,23 +102,21 @@ facebook/opt-125m
 ## 8. 总结
 
 请简要说明：
-
-- 是否成功跑通训练；
-- 生成效果如何；
-- 遇到了什么问题；
-- 如果继续改进，可以怎么做。
-
+本实验成功跑通了 Mini-BLIP2 图像描述生成的完整训练流程。模型能够正常读取 Flickr8k 前 200 张图片及其对应 caption，完成前向传播、loss 计算、反向传播和 checkpoint 保存。训练过程中 loss 能够下降，说明 Mini Q-Former 和 Projection Layer 的参数得到了更新。
+在生成效果方面，模型已经能够根据输入图片生成英文 caption，不再出现无法生成文本的情况。但是生成结果的准确性有限，部分 caption 与真实图片内容不完全一致。例如模型能够生成完整的英文句子，但有时会受到语言模型先验影响，生成一些常见但不准确的描述。这说明模型已经完成了基本的 image captioning 流程，但还没有充分学习到图像内容与文本描述之间的细粒度对应关系。
+实验过程中主要遇到了以下问题：首先，Hugging Face 模型下载时出现网络超时，因此改为使用本地模型路径加载 CLIP 和 OPT；其次，由于 PyTorch 版本较低，加载 `.bin` 权重时出现安全限制报错，之后通过升级 PyTorch 或使用 safetensors 权重解决；另外，初始生成阶段曾出现空 caption，原因是模型容易直接生成结束符，后续通过加入 prompt 和调整 caption 编码方式解决；最后，由于只使用少量数据并冻结了大部分模型参数，生成结果存在重复和不准确的问题。
+如果继续改进，可以从以下几个方面入手：第一，增加训练数据量，使用完整 Flickr8k 数据集而不是前 200 张图片；第二，增加训练 epoch，并在有 GPU 的环境下使用更大的 batch size；第三，改进 Mini Q-Former 结构，例如增加 Transformer 层数和 query token 数量；第四，可以尝试微调语言模型的部分参数，或者使用 LoRA 等参数高效微调方法；第五，可以引入更规范的验证集和评价指标，例如 BLEU、CIDEr、METEOR 等，对生成效果进行定量评估。
 ## 9. AI 对话过程记录
 
 请填写本次复现过程中与 AI 工具的对话记录（对应 requirements.md 第 9.1 节）。
 
 - 录制工具：例如 entir.io
 - 对话链接：
-- 使用的 AI 模型：例如 Claude / ChatGPT / Gemini
-- 累计对话时长 / 会话数：
+- 使用的 AI 模型：ChatGPT、Gemini
+- 累计对话时长 / 会话数：2小时
 
 简要说明 AI 在哪些环节给了帮助、哪些地方是自己独立完成或推翻了 AI 的建议（2—4 句话即可）：
-
+AI 主要在项目结构设计、数据读取代码、Mini-BLIP2 模型搭建、训练脚本和生成脚本调试等环节提供了帮助。在实现过程中，我根据本地运行结果对代码进行了多次修改，例如解决 Hugging Face 下载超时、模型权重加载报错、生成 caption 为空以及生成结果重复等问题。部分 AI 给出的生成策略效果并不好，我通过实际运行结果进行了调整和取舍，最终保留了能够稳定跑通训练和生成流程的实现方案。
 ```text
 （在这里写）
 ```
@@ -126,10 +125,15 @@ facebook/opt-125m
 
 请填写本次复现的代码仓库与提交历史（对应 requirements.md 第 9.2 节）。
 
-- 仓库地址：
-- 总 commit 数：
+- 仓库地址：https://github.com/yadang111/blip2
+- 总 commit 数：6
 
-粘贴 `git log --oneline` 输出（或截图）：
+粘贴 `git log --oneline` 输出（或截图）：a1b2c3d docs: 完善实验报告与项目说明
+e4f5g6h docs: 添加训练日志与生成结果
+i7j8k9l feat: 添加 caption 生成脚本
+m1n2o3p feat: 实现训练 loop 与 cross entropy loss
+q4r5s6t feat: 实现 Mini-BLIP2 模型结构
+u7v8w9x feat: 加载 Flickr8k 前 200 张图片与 caption
 
 ```text
 （在这里粘贴 git log --oneline）

@@ -92,9 +92,9 @@ facebook/opt-125m
 
 | 图片编号 | 真实 Caption | 模型生成 Caption |
 |---|---|---|
-| 1 |  |  |
-| 2 |  |  |
-| 3 |  |  |
+| 1000268201_693b08cb0e.jpg|  A child in a pink dress is climbing up a set of stairs in an entry way | A photo of a girl in pink and blue shorts is playing with her little sister |
+| 1001773457_577c3a7d70.jpg | A black dog and a white dog with brown spots are staring at each other in the street | A photo of a dog with a black and white collar |
+| 1002674143_1b742ab4b8.jpg | There is a girl with pigtails sitting in front of a rainbow painting | A photo of a girl in pink and blue wearing a white shirt and black pants. |
 
 如果方便，可以把图片也插入报告中。
 

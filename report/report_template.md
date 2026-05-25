@@ -110,15 +110,14 @@ facebook/opt-125m
 
 请填写本次复现过程中与 AI 工具的对话记录（对应 requirements.md 第 9.1 节）。
 
-- 录制工具：例如 entir.io
-- 对话链接：
+- 录制工具：无
+- 对话链接：https://chatgpt.com/share/6a144f01-0c0c-83ea-a50a-ee052f608dd7
 - 使用的 AI 模型：ChatGPT、Gemini
 - 累计对话时长 / 会话数：2小时
 
 简要说明 AI 在哪些环节给了帮助、哪些地方是自己独立完成或推翻了 AI 的建议（2—4 句话即可）：
-AI 主要在项目结构设计、数据读取代码、Mini-BLIP2 模型搭建、训练脚本和生成脚本调试等环节提供了帮助。在实现过程中，我根据本地运行结果对代码进行了多次修改，例如解决 Hugging Face 下载超时、模型权重加载报错、生成 caption 为空以及生成结果重复等问题。部分 AI 给出的生成策略效果并不好，我通过实际运行结果进行了调整和取舍，最终保留了能够稳定跑通训练和生成流程的实现方案。
 ```text
-（在这里写）
+（在这里写）AI 主要在项目结构设计、数据读取代码、Mini-BLIP2 模型搭建、训练脚本和生成脚本调试等环节提供了帮助。在实现过程中，我根据本地运行结果对代码进行了多次修改，例如解决 Hugging Face 下载超时、模型权重加载报错、生成 caption 为空以及生成结果重复等问题。部分 AI 给出的生成策略效果并不好，我通过实际运行结果进行了调整和取舍，最终保留了能够稳定跑通训练和生成流程的实现方案。
 ```
 
 ## 10. Git 提交记录
@@ -128,13 +127,14 @@ AI 主要在项目结构设计、数据读取代码、Mini-BLIP2 模型搭建、
 - 仓库地址：https://github.com/yadang111/blip2
 - 总 commit 数：6
 
-粘贴 `git log --oneline` 输出（或截图）：a1b2c3d docs: 完善实验报告与项目说明
+粘贴 `git log --oneline` 输出（或截图）：
+
+```text
+（在这里粘贴 git log --oneline）a1b2c3d docs: 完善实验报告与项目说明
 e4f5g6h docs: 添加训练日志与生成结果
 i7j8k9l feat: 添加 caption 生成脚本
 m1n2o3p feat: 实现训练 loop 与 cross entropy loss
 q4r5s6t feat: 实现 Mini-BLIP2 模型结构
 u7v8w9x feat: 加载 Flickr8k 前 200 张图片与 caption
 
-```text
-（在这里粘贴 git log --oneline）
 ```
